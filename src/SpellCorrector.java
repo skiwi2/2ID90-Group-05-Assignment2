@@ -34,13 +34,36 @@ public class SpellCorrector {
         
         return 0.0;
     }
-         
+    public String deleteCharAt(String strValue, int index) {
+        return strValue.substring(0, index) + strValue.substring(index + 1);
+ 
+    }
+    public String insertCharAt(String strValue, int index, char c){
+        return strValue.substring(0,index) + c + strValue.substring(index);
+    }
+    public String subCharAt(String strValue, int index, char c){
+        return strValue.substring(0,index) + c + strValue.substring(index+1);
+    }
       
     public HashSet<String> getCandidateWords(String word)
     {
         HashSet<String> ListOfWords = new HashSet<String>();
-        
-        /** CODE TO BE ADDED **/
+        String w;
+        for (int i = 0; i < word.length()+1; i++) {
+            w = deleteCharAt(word+" ", i);
+           //System.out.println(w);
+            ListOfWords.add(w.trim());
+            for (int j = 0; j < 26; j++) {
+                 w = insertCharAt(word, i, ALPHABET[j]);
+                //System.out.println(w);
+                ListOfWords.add(w.trim());
+                w = subCharAt(word+" ", i, ALPHABET[j]);
+                //System.out.println(w);
+                ListOfWords.add(w.trim());
+            }
+            
+            
+        }
         
         return cr.inVocabulary(ListOfWords);
     }          

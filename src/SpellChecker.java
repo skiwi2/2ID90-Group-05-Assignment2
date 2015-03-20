@@ -11,12 +11,15 @@ public class SpellChecker {
      */
     public static void main(String[] args) 
     {
+        
         boolean inPeach = false; // set this to true if you submit to peach!!!
         
         try {
             CorpusReader cr = new CorpusReader();
             ConfusionMatrixReader cmr = new ConfusionMatrixReader();
             SpellCorrector sc = new SpellCorrector(cr, cmr);
+            //System.out.println(sc.subCharAt("test", 3, 'a'));
+            System.out.println(sc.getCandidateWords("tesp").toString());
             if (inPeach) {
                 peachTest(sc);
             } else {
