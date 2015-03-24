@@ -115,10 +115,12 @@ public class CorpusReader
             throw new IllegalArgumentException("NGram must be non-empty.");
         }
         
-        double smoothedCount = 0.0;
+        String[] words = NGram.split(" ");
+        if (words.length > 2) {
+            throw new IllegalArgumentException("expected 2 words, got: " + words.length);
+        }
         
-        /** ADD CODE HERE **/
-        
+        double smoothedCount = (getNGramCount(words[0] + " " + words[1]) + 1) * 1d / (getNGramCount(words[0]) + ngrams.size());
         
         return smoothedCount;        
     }
