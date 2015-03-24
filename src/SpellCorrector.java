@@ -77,7 +77,7 @@ public class SpellCorrector {
     
     private double calculateWordStrength(final String candidateWord, final int index, final String[] words) {
         String ngram = ((index == 0) ? "" : words[index - 1]) + " " + candidateWord;
-        return cr.getSmoothedCount(ngram);  //TODO multiply by calculateChannelModelProbability
+        return (cr.getSmoothedCount(ngram) * (1d - calculateChannelModelProbability(candidateWord, words[index])));
     }
     
     public double calculateChannelModelProbability(String suggested, String incorrect) 
