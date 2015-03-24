@@ -1,5 +1,9 @@
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
+import java.util.Map;
 import java.util.List;
 import java.util.Set;
 
@@ -24,23 +28,51 @@ public class SpellCorrector {
         }
             
         String[] words = phrase.split(" ");
-        List<String> finalWords = new ArrayList<>();
-
-        for (int i = 0; i < words.length; i++) {
-            Set<String> candidateWords = getCandidateWords(words[i]);
-            double bestWordStrength = Double.MIN_VALUE;
-            String bestWord = "";
-            for (String candidateWord : candidateWords) {
-                double wordStrength = calculateWordStrength(candidateWord, i, words);
-                if (wordStrength > bestWordStrength) {
-                    bestWordStrength = wordStrength;
-                    bestWord = candidateWord;
-                }
-            }
-            finalWords.add(bestWord);
+        
+        List<String> currentSentence = new ArrayList<>();
+        Map<List<String>, Double> phraseStrengths = new HashMap<>();
+        recursiveCorrectPhrase(words, 0, currentSentence, 1d, 0, phraseStrengths);
+        
+        List<String> bestSentence = phraseStrengths.entrySet().stream()
+            .sorted(Comparator.<Map.Entry<List<String>, Double>>comparingDouble(entry -> entry.getValue()).reversed())
+            .findFirst().get().getKey();
+        return String.join(" ", bestSentence);
+    }
+    
+    private void recursiveCorrectPhrase(final String[] words, final int index, final List<String> currentSentence, final double currentStrength, final int currentErrors, final Map<List<String>, Double> phraseStrengths) {
+        List<String> newSentence = new ArrayList<>(currentSentence);
+        int newErrors = currentErrors;
+        
+        if (index == words.length) {
+            //leaf node
+            phraseStrengths.put(newSentence, currentStrength);
+            return;
         }
         
-        return String.join(" ", finalWords);
+        //if max amount of errors has occured, finish the word
+        if (currentErrors == 2) {
+            for (int i = index; i < words.length; i++) {
+                newSentence.add(words[i]);
+            }
+            phraseStrengths.put(newSentence, currentStrength);
+            return;
+        }
+        
+        //check if last word was incorrect, if so, skip expanding recursion
+        if (index > 0 && !Objects.equals(words[index - 1], newSentence.get(index - 1))) {
+            newErrors++;
+            newSentence.add(words[index]);
+            recursiveCorrectPhrase(words, index + 1, newSentence, currentStrength, newErrors, phraseStrengths);
+            return;
+        }
+        
+        Set<String> candidateWords = getCandidateWords(words[index]);
+        for (String candidateWord : candidateWords) {
+            newSentence.add(candidateWord);
+            double wordStrength = calculateWordStrength(candidateWord, index, words);
+            recursiveCorrectPhrase(words, index + 1, newSentence, currentStrength * wordStrength, newErrors, phraseStrengths);
+            newSentence.remove(newSentence.size() - 1);
+        }
     }
     
     private double calculateWordStrength(final String candidateWord, final int index, final String[] words) {
