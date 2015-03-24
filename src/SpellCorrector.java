@@ -25,6 +25,7 @@ public class SpellCorrector {
         
         /** CODE TO BE ADDED **/
         
+        
         return finalSuggestion.trim();
     }
     
@@ -34,14 +35,14 @@ public class SpellCorrector {
         
         return 0.0;
     }
-    public String deleteCharAt(String strValue, int index) {
+    private String deleteCharAt(String strValue, int index) {
         return strValue.substring(0, index) + strValue.substring(index + 1);
  
     }
-    public String insertCharAt(String strValue, int index, char c){
+    private String insertCharAt(String strValue, int index, char c){
         return strValue.substring(0,index) + c + strValue.substring(index);
     }
-    public String subCharAt(String strValue, int index, char c){
+    private String subCharAt(String strValue, int index, char c){
         return strValue.substring(0,index) + c + strValue.substring(index+1);
     }
       

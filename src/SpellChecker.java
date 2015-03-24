@@ -18,8 +18,9 @@ public class SpellChecker {
             CorpusReader cr = new CorpusReader();
             ConfusionMatrixReader cmr = new ConfusionMatrixReader();
             SpellCorrector sc = new SpellCorrector(cr, cmr);
-            //System.out.println(sc.subCharAt("test", 3, 'a'));
-            System.out.println(sc.getCandidateWords("tesp").toString());
+            //System.out.println(sc.subCharAt("test ", 4, 'a'));
+            //System.out.println(sc.insertCharAt("test", 4, 'a'));
+            System.out.println(sc.getCandidateWords("hme").toString());
             if (inPeach) {
                 peachTest(sc);
             } else {
