@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class SpellCorrector {
     final private CorpusReader cr;
@@ -21,12 +24,28 @@ public class SpellCorrector {
         }
             
         String[] words = phrase.split(" ");
-        String finalSuggestion = "";
+        List<String> finalWords = new ArrayList<>();
+
+        for (int i = 0; i < words.length; i++) {
+            Set<String> candidateWords = getCandidateWords(words[i]);
+            double bestWordStrength = Double.MIN_VALUE;
+            String bestWord = "";
+            for (String candidateWord : candidateWords) {
+                double wordStrength = calculateWordStrength(candidateWord, i, words);
+                if (wordStrength > bestWordStrength) {
+                    bestWordStrength = wordStrength;
+                    bestWord = candidateWord;
+                }
+            }
+            finalWords.add(bestWord);
+        }
         
-        /** CODE TO BE ADDED **/
-        
-        
-        return finalSuggestion.trim();
+        return String.join(" ", finalWords);
+    }
+    
+    private double calculateWordStrength(final String candidateWord, final int index, final String[] words) {
+        String ngram = ((index == 0) ? "" : words[index - 1]) + " " + candidateWord;
+        return cr.getSmoothedCount(ngram);  //TODO multiply by calculateChannelModelProbability
     }
     
     public double calculateChannelModelProbability(String suggested, String incorrect) 
@@ -68,4 +87,4 @@ public class SpellCorrector {
         
         return cr.inVocabulary(ListOfWords);
     }          
-}
+}   
