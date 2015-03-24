@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class CorpusReader
      */
      public int getNGramCount(String nGram) throws  NumberFormatException
     {
-        if(nGram == null || nGram.length() == 0)
+        if(nGram == null)   //empty strings are allowed, they will return 0
         {
             throw new IllegalArgumentException("NGram must be non-empty.");
         }
