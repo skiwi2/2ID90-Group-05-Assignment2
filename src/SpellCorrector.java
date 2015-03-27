@@ -82,9 +82,46 @@ public class SpellCorrector {
     
     public double calculateChannelModelProbability(String suggested, String incorrect) 
     {
-         /** CODE TO BE ADDED **/
-        
+        if (suggested.length() < incorrect.length()) {
+            for (int i = 0; i < suggested.length(); i++) {
+                if (suggested.charAt(i) != incorrect.charAt(i)) {
+//                    System.out.println("P(" + suggested.charAt(i) + "|" + incorrect.charAt(i) + incorrect.charAt(i + 1) + ")");
+
+                    return cmr.getConfusionCount("" + incorrect.charAt(i) + incorrect.charAt(i + 1), suggested.charAt(i) + "");
+
+                }
+            }
+//            System.out.println("P(" + suggested.charAt(suggested.length() - 1) + "|" + incorrect.charAt(incorrect.length() - 2) + incorrect.charAt(incorrect.length() - 1) + ")");
+            return cmr.getConfusionCount("" + incorrect.charAt(incorrect.length() - 2) + incorrect.charAt(incorrect.length() - 1), suggested.charAt(suggested.length() - 1) + "");
+        }
+        if (suggested.length() > incorrect.length()) {
+            for (int i = 0; i < incorrect.length(); i++) {
+                if (suggested.charAt(i) != incorrect.charAt(i)) {
+//                    System.out.println("P(" + suggested.charAt(i) + suggested.charAt(i + 1) + "|" + incorrect.charAt(i) + ")");
+                    return cmr.getConfusionCount("" + incorrect.charAt(i), "" + suggested.charAt(i) + suggested.charAt(i + 1));
+
+                }
+            }
+//            System.out.println("P(" + suggested.charAt(suggested.length() - 2) + suggested.charAt(suggested.length() - 1) + "|" + incorrect.charAt(incorrect.length() - 1) + ")");
+            return cmr.getConfusionCount("" + incorrect.charAt(incorrect.length() - 1), "" + suggested.charAt(suggested.length() - 2) + suggested.charAt(suggested.length() - 1));
+
+        }
+        if (suggested.length() == incorrect.length()) {
+            for (int i = 0; i < incorrect.length() - 1; i++) {
+                if (suggested.charAt(i) != incorrect.charAt(i)) {
+                    if (suggested.charAt(i) == incorrect.charAt(i + 1) && incorrect.charAt(i) == suggested.charAt(i + 1)) {
+//                        System.out.println("P(" + suggested.charAt(i) + suggested.charAt(i + 1) + "|" + incorrect.charAt(i) + incorrect.charAt(i + 1) + ")");
+                        return cmr.getConfusionCount("" + incorrect.charAt(i) + incorrect.charAt(i + 1), "" + suggested.charAt(i) + suggested.charAt(i + 1));
+                    } else {
+//                        System.out.println("P(" + suggested.charAt(i) + "|" + incorrect.charAt(i) + ")");
+                        return cmr.getConfusionCount("" + incorrect.charAt(i), suggested.charAt(i) + "");
+                    }
+
+                }
+            }
+        }
         return 0.0;
+
     }
     private String deleteCharAt(String strValue, int index) {
         return strValue.substring(0, index) + strValue.substring(index + 1);
